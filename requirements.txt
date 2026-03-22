@@ -2,3 +2,4 @@ google-generativeai
 requests
 feedparser
 oauth2client
+tmdbv3api
