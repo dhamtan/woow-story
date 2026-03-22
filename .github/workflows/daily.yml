@@ -1,0 +1,21 @@
+name: Discover-Bot
+on:
+  schedule:
+    - cron: '0 2 * * *' # सुबह 7:30 बजे चलेगा
+  workflow_dispatch:
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: pip install -r requirements.txt
+      - env:
+          GEMINI_KEY: ${{ secrets.GEMINI_KEY }}
+          PEXELS_KEY: ${{ secrets.PEXELS_KEY }}
+          MY_URL: ${{ secrets.MY_URL }}
+        run: python script.py
+      - run: |
+          git config user.name "DiscoverBot"
+          git add .
+          git commit -m "New Story"
+          git push
