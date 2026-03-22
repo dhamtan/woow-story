@@ -19,4 +19,4 @@ def push_index(target_url):
         print(f"Indexing Error: {e}")
 
 # अपनी साइट का लिंक पिंग करें
-push_index(SITE_URL)
+push_index(SITE_URL)https://dhamtan.github.io/woow-story/
