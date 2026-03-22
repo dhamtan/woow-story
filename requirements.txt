@@ -3,3 +3,5 @@ requests
 feedparser
 oauth2client
 tmdbv3api
+pyopenssl
+cryptography
