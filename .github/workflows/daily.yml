@@ -1,10 +1,11 @@
-name: Discover-Bot
+name: Global-Discover-Bot
 on:
   schedule:
-    - cron: '0 2 * * *' # सुबह 7:30 बजे चलेगा
+    - cron: '0 2 * * *'  # सुबह 7:30 बजे (India Time)
+    - cron: '0 14 * * *' # शाम 7:30 बजे (Global Market Peak)
   workflow_dispatch:
 jobs:
-  run:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -12,10 +13,11 @@ jobs:
       - env:
           GEMINI_KEY: ${{ secrets.GEMINI_KEY }}
           PEXELS_KEY: ${{ secrets.PEXELS_KEY }}
+          TMDB_KEY: ${{ secrets.TMDB_KEY }}
           MY_URL: ${{ secrets.MY_URL }}
         run: python script.py
       - run: |
-          git config user.name "DiscoverBot"
+          git config user.name "DiscoverProBot"
           git add .
-          git commit -m "New Story"
+          git commit -m "Auto-Update: Hindi & English Stories"
           git push
