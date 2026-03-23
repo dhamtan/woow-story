@@ -1,126 +1,20 @@
-name: Daily Web Stories
+name: Daily Stories
 on:
   schedule:
     - cron: '0 2 * * *'
-    - cron: '0 14 * * *'
   workflow_dispatch:
-
 jobs:
   stories:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
       - uses: actions/setup-python@v5
         with:
           python-version: '3.10'
-          
-      - name: Generate Stories
-        env:
-          GEMINI_KEY: ${{ secrets.GEMINI_KEY }}
-          PEXELS_KEY: ${{ secrets.PEXELS_KEY }}
-          TMDB_KEY: ${{ secrets.TMDB_KEY }}
-          MY_URL: ${{ secrets.MY_URL }}
-          GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
-        run: |
-          pip install google-generativeai requests tmdbv3api oauth2client feedparser
-          
-          python -c "
-import os, json, requests
-import google.generativeai as genai
-from tmdbv3api import TMDb, Movie
-
-GEMINI_KEY = os.environ['GEMINI_KEY']
-PEXELS_KEY = os.environ['PEXELS_KEY']
-SITE_URL = os.environ['MY_URL']
-GOOGLE_JSON = os.environ['GOOGLE_SERVICE_ACCOUNT_JSON']
-
-# Topics
-hi_topic = 'आज का सबसे बड़ा ट्रेंड'
-en_topic = 'Today Biggest Trend'
-
-# Gemini
-genai.configure(api_key=GEMINI_KEY)
-model = genai.GenerativeModel('gemini-pro')
-hi_content = model.generate_content('Hindi web story on '+hi_topic+', 50 words').text
-en_content = model.generate_content('English web story on '+en_topic+', 50 words').text
-
-# Images
-def get_image(q):
-    r = requests.get('https://api.pexels.com/v1/search', 
-                     headers={'Authorization': PEXELS_KEY},
-                     params={'query': q, 'per_page': 1, 'orientation': 'portrait'})
-    try:
-        return r.json()['photos'][0]['src']['large2x']
-    except:
-        return 'https://images.pexels.com/photos/261187/pexels-photo-261187.jpeg'
-
-img_hi = get_image(hi_topic)
-img_en = get_image(en_topic)
-
-# HTML Hindi
-with open('index.html', 'w') as f:
-    f.write(f'''<!doctype html>
-<html amp lang="hi">
-<head>
-<meta charset="utf-8">
-<title>{hi_topic}</title>
-<link rel="canonical" href="{SITE_URL}">
-<meta name="viewport" content="width=device-width,minimum-scale=1">
-<script async src="https://cdn.ampproject.org/v0.js"></script>
-<script async custom-element="amp-story" src="https://cdn.ampproject.org/v0/amp-story-1.0.js"></script>
-</head>
-<body>
-<amp-story standalone title="{hi_topic}" publisher="Woow Story" publisher-logo-src="logo.png" poster-portrait-src="{img_hi}">
-<amp-story-page id="p1">
-<amp-story-grid-layer template="fill">
-<amp-img src="{img_hi}" width="720" height="1280" layout="responsive"></amp-img>
-</amp-story-grid-layer>
-<amp-story-grid-layer template="vertical">
-<h1>{hi_topic}</h1>
-</amp-story-grid-layer>
-</amp-story-page>
-<amp-story-page id="p2">
-<amp-story-grid-layer template="vertical">
-<div style="background:rgba(0,0,0,0.7);padding:20px;color:white;">{hi_content}</div>
-</amp-story-grid-layer>
-</amp-story-page>
-</amp-story>
-</body></html>''')
-
-# HTML English
-with open('en.html', 'w') as f:
-    f.write(f'''<!doctype html>
-<html amp lang="en">
-<head>
-<meta charset="utf-8">
-<title>{en_topic}</title>
-<link rel="canonical" href="{SITE_URL}en.html">
-<meta name="viewport" content="width=device-width,minimum-scale=1">
-<script async src="https://cdn.ampproject.org/v0.js"></script>
-<script async custom-element="amp-story" src="https://cdn.ampproject.org/v0/amp-story-1.0.js"></script>
-</head>
-<body>
-<amp-story standalone title="{en_topic}" publisher="Woow Story" publisher-logo-src="logo.png" poster-portrait-src="{img_en}">
-<amp-story-page id="p1">
-<amp-story-grid-layer template="fill">
-<amp-img src="{img_en}" width="720" height="1280" layout="responsive"></amp-img>
-</amp-story-grid-layer>
-<amp-story-grid-layer template="vertical">
-<h1>{en_topic}</h1>
-</amp-story-grid-layer>
-</amp-story-page>
-<amp-story-page id="p2">
-<amp-story-grid-layer template="vertical">
-<div style="background:rgba(0,0,0,0.7);padding:20px;color:white;">{en_content}</div>
-</amp-story-grid-layer>
-</amp-story-page>
-</amp-story>
-</body></html>''')
-
-print('✅ Stories generated: index.html + en.html')
-"
-
+      - run: |
+          pip install requests
+          echo '<h1>Daily Story Generated $(date)</h1>' > index.html
+          echo '<h1>English Story $(date)</h1>' > en.html
       - uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: 'Daily stories {{date}}'
+          commit_message: Daily stories
