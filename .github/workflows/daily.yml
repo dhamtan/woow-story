@@ -1,22 +1,21 @@
-name: Daily Web Stories (2x/day)
+name: Daily Web Stories
 on:
   schedule:
-    - cron: '0 2 * * *'    # 2AM IST
-    - cron: '0 14 * * *'   # 2PM IST
+    - cron: '0 2 * * *'
+    - cron: '0 14 * * *'
   workflow_dispatch:
 
 jobs:
-  generatestories:
+  stories:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - uses: actions/setup-python@v5
         with:
           python-version: '3.10'
           
-      - name: Generate Hindi & English Stories
+      - name: Generate Stories
         env:
           GEMINI_KEY: ${{ secrets.GEMINI_KEY }}
           PEXELS_KEY: ${{ secrets.PEXELS_KEY }}
@@ -24,46 +23,45 @@ jobs:
           MY_URL: ${{ secrets.MY_URL }}
           GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
         run: |
+          pip install google-generativeai requests tmdbv3api oauth2client feedparser
+          
           python -c "
 import os, json, requests
 import google.generativeai as genai
 from tmdbv3api import TMDb, Movie
-from oauth2client.service_account import ServiceAccountCredentials
 
-GEMINI_KEY = '$GEMINI_KEY'
-PEXELS_KEY = '$PEXELS_KEY'
-TMDB_KEY = '$TMDB_KEY'
-SITE_URL = '$MY_URL'
-GOOGLE_JSON = '$GOOGLE_SERVICE_ACCOUNT_JSON'
+GEMINI_KEY = os.environ['GEMINI_KEY']
+PEXELS_KEY = os.environ['PEXELS_KEY']
+SITE_URL = os.environ['MY_URL']
+GOOGLE_JSON = os.environ['GOOGLE_SERVICE_ACCOUNT_JSON']
 
-# Service account file
-with open('service.json', 'w') as f: f.write(GOOGLE_JSON)
+# Topics
+hi_topic = 'आज का सबसे बड़ा ट्रेंड'
+en_topic = 'Today Biggest Trend'
 
-# TMDB setup
-tmdb = TMDb(); tmdb.api_key = TMDB_KEY; movie = Movie()
-hi_topic = 'आज का ट्रेंडिंग न्यूज़'  # movie.popular()[0].title if movie.popular() else 
-en_topic = 'Today Trending News'   # movie.popular()[0].title if movie.popular() else 
-
-# Gemini content
+# Gemini
 genai.configure(api_key=GEMINI_KEY)
 model = genai.GenerativeModel('gemini-pro')
-hi_content = model.generate_content(f'5-slide Hindi web story on {hi_topic}, max 50 words').text
-en_content = model.generate_content(f'5-slide English web story on {en_topic}, max 50 words').text
+hi_content = model.generate_content('Hindi web story on '+hi_topic+', 50 words').text
+en_content = model.generate_content('English web story on '+en_topic+', 50 words').text
 
-# Pexels images
-def get_img(query):
+# Images
+def get_image(q):
     r = requests.get('https://api.pexels.com/v1/search', 
                      headers={'Authorization': PEXELS_KEY},
-                     params={'query': query, 'per_page': 1, 'orientation': 'portrait'})
-    photos = r.json().get('photos', [])
-    return photos[0]['src']['large2x'] if photos else 'https://images.pexels.com/photos/261187/pexels-photo-261187.jpeg'
+                     params={'query': q, 'per_page': 1, 'orientation': 'portrait'})
+    try:
+        return r.json()['photos'][0]['src']['large2x']
+    except:
+        return 'https://images.pexels.com/photos/261187/pexels-photo-261187.jpeg'
 
-img_hi = get_img(hi_topic)
-img_en = get_img(en_topic)
+img_hi = get_image(hi_topic)
+img_en = get_image(en_topic)
 
-# AMP HTML Hindi
-html_hi = f'''<!doctype html>
-<html ⚡ lang="hi">
+# HTML Hindi
+with open('index.html', 'w') as f:
+    f.write(f'''<!doctype html>
+<html amp lang="hi">
 <head>
 <meta charset="utf-8">
 <title>{hi_topic}</title>
@@ -73,7 +71,7 @@ html_hi = f'''<!doctype html>
 <script async custom-element="amp-story" src="https://cdn.ampproject.org/v0/amp-story-1.0.js"></script>
 </head>
 <body>
-<amp-story standalone title="{hi_topic}" publisher="AutoBot" publisher-logo-src="logo.png" poster-portrait-src="{img_hi}">
+<amp-story standalone title="{hi_topic}" publisher="Woow Story" publisher-logo-src="logo.png" poster-portrait-src="{img_hi}">
 <amp-story-page id="p1">
 <amp-story-grid-layer template="fill">
 <amp-img src="{img_hi}" width="720" height="1280" layout="responsive"></amp-img>
@@ -88,19 +86,41 @@ html_hi = f'''<!doctype html>
 </amp-story-grid-layer>
 </amp-story-page>
 </amp-story>
-</body></html>'''
+</body></html>''')
 
-# English version
-html_en = html_hi.replace('lang="hi"', 'lang="en"').replace(hi_topic, en_topic).replace(img_hi, img_en).replace(SITE_URL, SITE_URL+'en.html')
+# HTML English
+with open('en.html', 'w') as f:
+    f.write(f'''<!doctype html>
+<html amp lang="en">
+<head>
+<meta charset="utf-8">
+<title>{en_topic}</title>
+<link rel="canonical" href="{SITE_URL}en.html">
+<meta name="viewport" content="width=device-width,minimum-scale=1">
+<script async src="https://cdn.ampproject.org/v0.js"></script>
+<script async custom-element="amp-story" src="https://cdn.ampproject.org/v0/amp-story-1.0.js"></script>
+</head>
+<body>
+<amp-story standalone title="{en_topic}" publisher="Woow Story" publisher-logo-src="logo.png" poster-portrait-src="{img_en}">
+<amp-story-page id="p1">
+<amp-story-grid-layer template="fill">
+<amp-img src="{img_en}" width="720" height="1280" layout="responsive"></amp-img>
+</amp-story-grid-layer>
+<amp-story-grid-layer template="vertical">
+<h1>{en_topic}</h1>
+</amp-story-grid-layer>
+</amp-story-page>
+<amp-story-page id="p2">
+<amp-story-grid-layer template="vertical">
+<div style="background:rgba(0,0,0,0.7);padding:20px;color:white;">{en_content}</div>
+</amp-story-grid-layer>
+</amp-story-page>
+</amp-story>
+</body></html>''')
 
-with open('index.html', 'w') as f: f.write(html_hi)
-with open('en.html', 'w') as f: f.write(html_en)
-
-print('✅ Generated: index.html (Hindi) + en.html (English)')
-print('✅ Images:', img_hi[:100], '...', img_en[:100], '...')
+print('✅ Stories generated: index.html + en.html')
 "
 
-      - name: Auto Commit & Push
-        uses: stefanzweifel/git-auto-commit-action@v5
+      - uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: 'Daily stories updated {{date}}'
+          commit_message: 'Daily stories {{date}}'
