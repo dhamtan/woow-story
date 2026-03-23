@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write  # यह लाइन GitHub को फाइल लिखने की इजाजत देगी
+  contents: write
 
 jobs:
   stories:
@@ -22,37 +22,26 @@ jobs:
         env:
           GEMINI_KEY: ${{ secrets.GEMINI_KEY }}
           PEXELS_KEY: ${{ secrets.PEXELS_KEY }}
-          TMDB_KEY: ${{ secrets.TMDB_KEY }}
           MY_URL: ${{ secrets.MY_URL }}
-          GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
         run: |
-          pip install google-generativeai requests tmdbv3api oauth2client feedparser
+          pip install google-generativeai requests
           python -c "
-import os, requests
-import google.generativeai as genai
-
-# Keys
-GEMINI_KEY = os.environ['GEMINI_KEY']
-PEXELS_KEY = os.environ['PEXELS_KEY']
-SITE_URL = os.environ['MY_URL']
-
-# Gemini Setup
-genai.configure(api_key=GEMINI_KEY)
-model = genai.GenerativeModel('gemini-pro')
-
-def create_story(lang, topic, filename):
-    content = model.generate_content(f'{lang} web story on {topic}, 50 words').text
-    r = requests.get('https://api.pexels.com/v1/search', 
-                     headers={'Authorization': PEXELS_KEY},
-                     params={'query': topic, 'per_page': 1, 'orientation': 'portrait'})
-    img = r.json()['photos'][0]['src']['large2x'] if r.status_code == 200 and r.json()['photos'] else 'https://images.pexels.com/photos/261187/pexels-photo-261187.jpeg'
-    
-    html = f'''<!doctype html><html amp lang=\"{lang}\"><head><meta charset=\"utf-8\"><title>{topic}</title><link rel=\"canonical\" href=\"{SITE_URL}\"><meta name=\"viewport\" content=\"width=device-width,minimum-scale=1\"><script async src=\"https://cdn.ampproject.org/v0.js\"></script><script async custom-element=\"amp-story\" src=\"https://cdn.ampproject.org/v0/amp-story-1.0.js\"></script></head><body><amp-story standalone title=\"{topic}\" publisher=\"Woow Story\" publisher-logo-src=\"logo.png\" poster-portrait-src=\"{img}\"><amp-story-page id=\"p1\"><amp-story-grid-layer template=\"fill\"><amp-img src=\"{img}\" width=\"720\" height=\"1280\" layout=\"responsive\"></amp-img></amp-story-grid-layer><amp-story-grid-layer template=\"vertical\"><h1>{topic}</h1></amp-story-grid-layer></amp-story-page><amp-story-page id=\"p2\"><amp-story-grid-layer template=\"vertical\"><div style=\"background:rgba(0,0,0,0.7);padding:20px;color:white;\">{content}</div></amp-story-grid-layer></amp-story-page></amp-story></body></html>'''
-    with open(filename, 'w', encoding='utf-8') as f: f.write(html)
-
-create_story('hi', 'आज का सबसे बड़ा ट्रेंड', 'index.html')
-create_story('en', 'Today Biggest Trend', 'en.html')
-print('✅ Success')
+import os, requests, google.generativeai as genai
+try:
+    genai.configure(api_key=os.environ['GEMINI_KEY'])
+    model = genai.GenerativeModel('gemini-pro')
+    def create_s(l, t, f):
+        c = model.generate_content(f'{l} web story on {t}, 50 words').text
+        r = requests.get('https://api.pexels.com/v1/search', headers={'Authorization': os.environ['PEXELS_KEY']}, params={'query': t, 'per_page': 1, 'orientation': 'portrait'})
+        img = r.json()['photos'][0]['src']['large2x'] if r.status_code==200 and r.json()['photos'] else 'https://images.pexels.com/photos/261187/pexels-photo-261187.jpeg'
+        html = f'<!doctype html><html amp lang=\"{l}\"><head><meta charset=\"utf-8\"><title>{t}</title><link rel=\"canonical\" href=\"{os.environ[\"MY_URL\"]}\"><meta name=\"viewport\" content=\"width=device-width,minimum-scale=1\"><script async src=\"https://cdn.ampproject.org/v0.js\"></script><script async custom-element=\"amp-story\" src=\"https://cdn.ampproject.org/v0/amp-story-1.0.js\"></script></head><body><amp-story standalone title=\"{t}\" publisher=\"Woow Story\" publisher-logo-src=\"logo.png\" poster-portrait-src=\"{img}\"><amp-story-page id=\"p1\"><amp-story-grid-layer template=\"fill\"><amp-img src=\"{img}\" width=\"720\" height=\"1280\" layout=\"responsive\"></amp-img></amp-story-grid-layer><amp-story-grid-layer template=\"vertical\"><h1>{t}</h1></amp-story-grid-layer></amp-story-page><amp-story-page id=\"p2\"><amp-story-grid-layer template=\"vertical\"><div style=\"background:rgba(0,0,0,0.7);padding:20px;color:white;\">{c}</div></amp-story-grid-layer></amp-story-page></amp-story></body></html>'
+        with open(f, 'w', encoding='utf-8') as file: file.write(html)
+    create_s('hi', 'आज का सबसे बड़ा ट्रेंड', 'index.html')
+    create_s('en', 'Today Biggest Trend', 'en.html')
+    print('Done')
+except Exception as e:
+    print(f'Error: {e}')
+    exit(1)
 "
 
       - uses: stefanzweifel/git-auto-commit-action@v5
