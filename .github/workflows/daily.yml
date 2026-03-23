@@ -12,9 +12,11 @@ jobs:
   stories:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout Repository
+        uses: actions/checkout@v4
       
-      - uses: actions/setup-python@v5
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
           python-version: '3.10'
           
@@ -25,25 +27,33 @@ jobs:
           MY_URL: ${{ secrets.MY_URL }}
         run: |
           pip install google-generativeai requests
-          python -c "
-import os, requests, google.generativeai as genai
-try:
-    genai.configure(api_key=os.environ['GEMINI_KEY'])
-    model = genai.GenerativeModel('gemini-pro')
-    def create_s(l, t, f):
-        c = model.generate_content(f'{l} web story on {t}, 50 words').text
-        r = requests.get('https://api.pexels.com/v1/search', headers={'Authorization': os.environ['PEXELS_KEY']}, params={'query': t, 'per_page': 1, 'orientation': 'portrait'})
-        img = r.json()['photos'][0]['src']['large2x'] if r.status_code==200 and r.json()['photos'] else 'https://images.pexels.com/photos/261187/pexels-photo-261187.jpeg'
-        html = f'<!doctype html><html amp lang=\"{l}\"><head><meta charset=\"utf-8\"><title>{t}</title><link rel=\"canonical\" href=\"{os.environ[\"MY_URL\"]}\"><meta name=\"viewport\" content=\"width=device-width,minimum-scale=1\"><script async src=\"https://cdn.ampproject.org/v0.js\"></script><script async custom-element=\"amp-story\" src=\"https://cdn.ampproject.org/v0/amp-story-1.0.js\"></script></head><body><amp-story standalone title=\"{t}\" publisher=\"Woow Story\" publisher-logo-src=\"logo.png\" poster-portrait-src=\"{img}\"><amp-story-page id=\"p1\"><amp-story-grid-layer template=\"fill\"><amp-img src=\"{img}\" width=\"720\" height=\"1280\" layout=\"responsive\"></amp-img></amp-story-grid-layer><amp-story-grid-layer template=\"vertical\"><h1>{t}</h1></amp-story-grid-layer></amp-story-page><amp-story-page id=\"p2\"><amp-story-grid-layer template=\"vertical\"><div style=\"background:rgba(0,0,0,0.7);padding:20px;color:white;\">{c}</div></amp-story-grid-layer></amp-story-page></amp-story></body></html>'
-        with open(f, 'w', encoding='utf-8') as file: file.write(html)
-    create_s('hi', 'आज का सबसे बड़ा ट्रेंड', 'index.html')
-    create_s('en', 'Today Biggest Trend', 'en.html')
-    print('Done')
-except Exception as e:
-    print(f'Error: {e}')
-    exit(1)
-"
+          python << 'EOF'
+          import os, requests, google.generativeai as genai
+          
+          def save_html(lang, topic, filename):
+              try:
+                  genai.configure(api_key=os.environ['GEMINI_KEY'])
+                  model = genai.GenerativeModel('gemini-pro')
+                  content = model.generate_content(f'Write a 50-word story in {lang} about {topic}').text
+                  
+                  headers = {'Authorization': os.environ['PEXELS_KEY']}
+                  params = {'query': topic, 'per_page': 1, 'orientation': 'portrait'}
+                  r = requests.get('https://api.pexels.com/v1/search', headers=headers, params=params)
+                  img = r.json()['photos'][0]['src']['large2x'] if r.status_code == 200 and r.json()['photos'] else 'https://images.pexels.com/photos/261187/pexels-photo-261187.jpeg'
+                  
+                  site_url = os.environ['MY_URL']
+                  html = f"""<!doctype html><html amp lang="{lang}"><head><meta charset="utf-8"><title>{topic}</title><link rel="canonical" href="{site_url}"><meta name="viewport" content="width=device-width,minimum-scale=1"><script async src="https://cdn.ampproject.org/v0.js"></script><script async custom-element="amp-story" src="https://cdn.ampproject.org/v0/amp-story-1.0.js"></script></head><body><amp-story standalone title="{topic}" publisher="Woow Story" publisher-logo-src="logo.png" poster-portrait-src="{img}"><amp-story-page id="p1"><amp-story-grid-layer template="fill"><amp-img src="{img}" width="720" height="1280" layout="responsive"></amp-img></amp-story-grid-layer><amp-story-grid-layer template="vertical"><h1>{topic}</h1></amp-story-grid-layer></amp-story-page><amp-story-page id="p2"><amp-story-grid-layer template="vertical"><div style="background:rgba(0,0,0,0.7);padding:20px;color:white;font-size:1.2rem;">{content}</div></amp-story-grid-layer></amp-story-page></amp-story></body></html>"""
+                  
+                  with open(filename, 'w', encoding='utf-8') as f:
+                      f.write(html)
+              except Exception as e:
+                  print(f"Error generating {filename}: {e}")
 
-      - uses: stefanzweifel/git-auto-commit-action@v5
+          save_html('hi', 'आज का ट्रेंड', 'index.html')
+          save_html('en', 'Today Trend', 'en.html')
+          EOF
+
+      - name: Commit and Push
+        uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: 'Daily stories update'
+          commit_message: 'Daily stories updated'
