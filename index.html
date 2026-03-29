@@ -3,95 +3,137 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Varanasi Escorts | Cashoo Service - Real Profiles</title>
+    <title>CASHOO.SERVICE | Real Varanasi Profiles</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        /* Exact Brand Colors from NSIBAL */
-        :root { --brand-pink: #e91e63; }
-        body { background-color: #f7f7f7; font-family: sans-serif; }
-        .header-shadow { box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        .profile-card { border-radius: 12px; border: 1px solid #eee; overflow: hidden; background: white; }
-        .verified-tag { background: #22c55e; color: white; font-size: 8px; font-weight: bold; padding: 2px 6px; border-radius: 4px; }
-        .sticky-top { position: sticky; top: 0; z-index: 1000; }
+        .hidden { display: none; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .profile-card { border-radius: 15px; border: 1px solid #f0f0f0; }
     </style>
 </head>
-<body>
+<body class="bg-gray-50 pb-20">
 
-    <header class="sticky-top bg-white px-4 py-3 flex justify-between items-center header-shadow">
+    <header class="sticky top-0 bg-white shadow-sm z-50 px-4 py-3 flex justify-between items-center">
         <div class="flex items-center gap-2">
-            <div class="w-8 h-8 bg-pink-600 rounded-full flex items-center justify-center">
-                <i class="fas fa-heart text-white text-xs"></i>
-            </div>
-            <span class="text-xl font-black text-gray-800 tracking-tighter uppercase">CASHOO<span class="text-pink-600">.SERVICE</span></span>
+            <div class="bg-pink-600 p-1.5 rounded-full"><i class="fas fa-heart text-white text-[10px]"></i></div>
+            <span class="text-xl font-black uppercase tracking-tighter">CASHOO<span class="text-pink-600">.SERVICE</span></span>
         </div>
-        <button class="bg-gray-800 text-white px-4 py-1.5 rounded-full text-xs font-bold uppercase shadow-lg">Post Ad</button>
+        <button onclick="showSection('post-ad')" class="bg-gray-900 text-white px-5 py-2 rounded-full text-[10px] font-bold uppercase shadow-lg">Post Ad</button>
     </header>
 
-    <div class="bg-white p-4 border-b">
-        <div class="bg-gray-100 rounded-lg p-2 flex items-center gap-2 mb-3 border">
-            <i class="fas fa-search text-gray-400 ml-2"></i>
-            <input type="text" placeholder="Search Varanasi Escorts..." class="bg-transparent text-sm w-full outline-none">
-        </div>
-        <div class="flex gap-2 overflow-x-auto no-scrollbar py-1">
-            <span class="bg-pink-600 text-white px-4 py-1 rounded-full text-[10px] font-bold">Varanasi</span>
-            <span class="bg-white border text-gray-600 px-4 py-1 rounded-full text-[10px] font-bold">Independent</span>
-            <span class="bg-white border text-gray-600 px-4 py-1 rounded-full text-[10px] font-bold">Housewife</span>
-            <span class="bg-white border text-gray-600 px-4 py-1 rounded-full text-[10px] font-bold">College</span>
-        </div>
+    <div id="content-area">
+        <section id="home-page" class="p-4">
+            <h1 class="text-xl font-black text-gray-900 leading-none">Local Escorts & Call Girls in Varanasi</h1>
+            <p class="text-[9px] text-gray-400 font-bold mt-1 tracking-widest uppercase">Showing Real Results - 23 March 2026</p>
+            
+            <div id="ads-list" class="mt-4">
+                </div>
+            <div id="load-more-trigger" class="h-10 text-center text-gray-400 text-xs py-2 font-bold uppercase">Loading Previous Ads...</div>
+        </section>
+
+        <section id="post-ad" class="p-4 hidden">
+            <div class="bg-white p-6 rounded-2xl shadow-xl border text-center">
+                <i class="fas fa-user-lock text-4xl text-pink-600 mb-4"></i>
+                <h2 class="text-2xl font-black mb-2 uppercase">Account Required</h2>
+                <p class="text-sm text-gray-500 mb-6 font-medium">Please login or create an account to post advertisements.</p>
+                <input type="text" placeholder="Username / Email" class="w-full border-2 border-gray-100 p-3 rounded-xl mb-3 outline-none focus:border-pink-600">
+                <input type="password" placeholder="Password" class="w-full border-2 border-gray-100 p-3 rounded-xl mb-4 outline-none focus:border-pink-600">
+                <button onclick="alert('Login Successful! Directing to Dashboard...')" class="w-full bg-pink-600 text-white py-4 rounded-xl font-black shadow-lg mb-4">LOGIN</button>
+                <div class="text-xs font-bold text-gray-400 uppercase tracking-widest">New? <span class="text-pink-600 cursor-pointer">Sign Up Now</span></div>
+            </div>
+        </section>
+
+        <section id="policy-content" class="p-6 hidden bg-white min-h-screen">
+            <h2 id="p-title" class="text-2xl font-black mb-4 uppercase">Title</h2>
+            <div id="p-text" class="text-sm text-gray-600 leading-loose font-medium">Description...</div>
+            <button onclick="showSection('home-page')" class="mt-8 bg-gray-900 text-white px-8 py-3 rounded-full font-bold">Go Back</button>
+        </section>
     </div>
 
-    <div class="px-4 py-4">
-        <h1 class="text-xl font-extrabold text-gray-900 leading-tight">Local Escorts & Call Girls in Varanasi</h1>
-        <p class="text-[10px] text-gray-400 font-bold mt-1 uppercase tracking-widest">Showing Real Results - 23 March 2026</p>
-    </div>
-
-    <main class="px-3 grid grid-cols-2 gap-3 pb-24">
-        
-        <div class="profile-card relative shadow-sm">
-            <div class="absolute top-2 left-2 z-10"><span class="verified-tag uppercase">Verified</span></div>
-            <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&h=550&fit=crop" class="w-full h-52 object-cover">
-            <div class="p-3">
-                <h3 class="font-bold text-gray-800 text-sm">Priya (22)</h3>
-                <p class="text-[9px] text-gray-500 mb-2"><i class="fas fa-map-marker-alt text-pink-600"></i> Varanasi Cantt</p>
-                <div class="flex gap-1">
-                    <a href="tel:+918888888888" class="flex-1 bg-gray-900 text-white py-2 rounded text-[10px] font-black text-center call-btn">CALL</a>
-                    <a href="https://wa.me/918888888888" class="flex-1 bg-green-500 text-white py-2 rounded text-[10px] font-black text-center wa-btn"><i class="fab fa-whatsapp"></i></a>
-                </div>
-            </div>
-        </div>
-
-        <div class="profile-card relative shadow-sm">
-            <div class="absolute top-2 left-2 z-10"><span class="verified-tag uppercase" style="background: #3b82f6;">VIP MODEL</span></div>
-            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=550&fit=crop" class="w-full h-52 object-cover">
-            <div class="p-3">
-                <h3 class="font-bold text-gray-800 text-sm">Riya (24)</h3>
-                <p class="text-[9px] text-gray-500 mb-2"><i class="fas fa-map-marker-alt text-pink-600"></i> Lanka, Varanasi</p>
-                <div class="flex gap-1">
-                    <a href="tel:+918888888888" class="flex-1 bg-gray-900 text-white py-2 rounded text-[10px] font-black text-center call-btn">CALL</a>
-                    <a href="https://wa.me/918888888888" class="flex-1 bg-green-500 text-white py-2 rounded text-[10px] font-black text-center wa-btn"><i class="fab fa-whatsapp"></i></a>
-                </div>
-            </div>
-        </div>
-
-    </main>
-
-    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t py-2 px-6 flex justify-between items-center z-50 shadow-2xl">
-        <div class="flex flex-col items-center text-pink-600"><i class="fas fa-home"></i><span class="text-[8px] font-bold mt-1">HOME</span></div>
-        <div class="flex flex-col items-center text-gray-400"><i class="fas fa-search"></i><span class="text-[8px] font-bold mt-1">SEARCH</span></div>
-        <div class="flex flex-col items-center bg-pink-600 text-white w-10 h-10 rounded-full flex items-center justify-center -mt-8 border-4 border-white shadow-lg">
-            <i class="fas fa-plus"></i>
-        </div>
-        <div class="flex flex-col items-center text-gray-400"><i class="fas fa-heart"></i><span class="text-[8px] font-bold mt-1">SAVED</span></div>
-        <div class="flex flex-col items-center text-gray-400"><i class="fas fa-user"></i><span class="text-[8px] font-bold mt-1">LOGIN</span></div>
+    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t flex justify-around py-3 z-50 shadow-[0_-5px_15px_rgba(0,0,0,0.05)]">
+        <button onclick="showSection('home-page')" class="flex flex-col items-center text-pink-600"><i class="fas fa-home text-lg"></i><span class="text-[8px] font-black mt-1 uppercase">Home</span></button>
+        <button onclick="window.location.href='https://t.me/YOUR_TELEGRAM'" class="flex flex-col items-center text-blue-500"><i class="fab fa-telegram text-lg"></i><span class="text-[8px] font-black mt-1 uppercase">Telegram</span></button>
+        <button onclick="window.location.href='https://wa.me/91XXXXXXXXXX'" class="flex flex-col items-center text-green-500"><i class="fab fa-whatsapp text-lg"></i><span class="text-[8px] font-black mt-1 uppercase">WhatsApp</span></button>
+        <button onclick="showSection('post-ad')" class="flex flex-col items-center text-gray-400"><i class="fas fa-user-circle text-lg"></i><span class="text-[8px] font-black mt-1 uppercase">Login</span></button>
     </nav>
 
+    <footer class="bg-gray-100 p-8 text-center border-t">
+        <div class="flex flex-wrap justify-center gap-x-6 gap-y-3 mb-6 text-[10px] font-black text-gray-400 uppercase tracking-widest">
+            <span onclick="openPolicy('Privacy Policy', 'We value your privacy. Your data is encrypted.')" class="cursor-pointer hover:text-pink-600">Privacy Policy</span>
+            <span onclick="openPolicy('Terms', 'By using this site, you agree to our 18+ rules.')" class="cursor-pointer hover:text-pink-600">Terms</span>
+            <span onclick="openPolicy('Disclaimer', 'We are not responsible for any direct interaction.')" class="cursor-pointer hover:text-pink-600">Disclaimer</span>
+            <span onclick="openPolicy('Contact Us', 'Support Email: support@cashoo.service')" class="cursor-pointer hover:text-pink-600">Contact Us</span>
+        </div>
+        <p class="text-[9px] text-gray-300 font-bold uppercase tracking-widest">© 2026 CASHOO.SERVICE</p>
+    </footer>
+
     <script>
-        const MERA_NUMBER = "919876543210"; // <-- Bas yahan apna number likhen
+        const MERA_NUMBER = "91XXXXXXXXXX"; // Change this
+        let dateOffset = 0;
 
-        document.querySelectorAll('.call-btn').forEach(btn => btn.href = "tel:+" + MERA_NUMBER);
-        document.querySelectorAll('.wa-btn').forEach(btn => btn.href = "https://wa.me/" + MERA_NUMBER);
+        function showSection(id) {
+            document.querySelectorAll('section').forEach(s => s.classList.add('hidden'));
+            document.getElementById(id).classList.remove('hidden');
+            window.scrollTo(0, 0);
+        }
+
+        function openPolicy(title, text) {
+            showSection('policy-content');
+            document.getElementById('p-title').innerText = title;
+            document.getElementById('p-text').innerText = text;
+        }
+
+        function loadAds() {
+            if (dateOffset > 7) return; // Load up to 7 back dates
+            
+            const targetDate = new Date();
+            targetDate.setDate(targetDate.getDate() - dateOffset);
+            const dateStr = targetDate.toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' });
+
+            const daySection = document.createElement('div');
+            daySection.innerHTML = `
+                <div class="flex items-center gap-2 my-6">
+                    <span class="h-[1px] bg-gray-200 flex-1"></span>
+                    <span class="bg-gray-900 text-white px-4 py-1 rounded-full text-[9px] font-black uppercase tracking-widest italic">${dateStr}</span>
+                    <span class="h-[1px] bg-gray-200 flex-1"></span>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    ${adCard("Sonia (21)", "https://images.unsplash.com/photo-1604004553989-1ad314a17531?w=400")}
+                    ${adCard("Kajal (23)", "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=400")}
+                </div>
+            `;
+            document.getElementById('ads-list').appendChild(daySection);
+            dateOffset++;
+        }
+
+        function adCard(name, img) {
+            return `
+                <div class="profile-card bg-white shadow-sm overflow-hidden flex flex-col">
+                    <div class="relative">
+                        <span class="absolute top-2 left-2 bg-green-500 text-white text-[7px] font-black px-2 py-0.5 rounded uppercase">Verified</span>
+                        <img src="${img}" class="w-full h-48 object-cover">
+                    </div>
+                    <div class="p-3">
+                        <h3 class="text-sm font-black text-gray-800">${name}</h3>
+                        <p class="text-[8px] text-gray-400 font-bold uppercase"><i class="fas fa-map-marker-alt text-pink-600 mr-1"></i> Varanasi Local</p>
+                        <div class="flex gap-1.5 mt-3">
+                            <a href="tel:${MERA_NUMBER}" class="flex-1 bg-gray-900 text-white text-[9px] font-black py-2 rounded-lg text-center uppercase">Call</a>
+                            <a href="https://wa.me/${MERA_NUMBER}" class="w-10 bg-green-500 text-white flex items-center justify-center rounded-lg shadow-md"><i class="fab fa-whatsapp text-sm"></i></a>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Infinite Scroll
+        window.onscroll = () => {
+            if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 400) loadAds();
+        };
+
+        // Init
+        loadAds();
+        loadAds();
     </script>
-
 </body>
 </html>
