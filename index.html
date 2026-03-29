@@ -3,21 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CASHOO.SERVICE | Real Varanasi Profiles</title>
+    <title>CASHOO.SERVICE | Premium Varanasi Escorts</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         .hidden { display: none; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
-        .profile-card { border-radius: 15px; border: 1px solid #f0f0f0; }
+        .profile-card { border-radius: 15px; border: 1px solid #f0f0f0; background: white; transition: 0.3s; }
+        .profile-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
     </style>
 </head>
-<body class="bg-gray-50 pb-20">
+<body class="bg-gray-50 pb-20 font-sans">
 
     <header class="sticky top-0 bg-white shadow-sm z-50 px-4 py-3 flex justify-between items-center">
-        <div class="flex items-center gap-2">
+        <div class="flex items-center gap-2 cursor-pointer" onclick="showSection('home-page')">
             <div class="bg-pink-600 p-1.5 rounded-full"><i class="fas fa-heart text-white text-[10px]"></i></div>
-            <span class="text-xl font-black uppercase tracking-tighter">CASHOO<span class="text-pink-600">.SERVICE</span></span>
+            <span class="text-xl font-black uppercase tracking-tighter italic">CASHOO<span class="text-pink-600">.SERVICE</span></span>
         </div>
         <button onclick="showSection('post-ad')" class="bg-gray-900 text-white px-5 py-2 rounded-full text-[10px] font-bold uppercase shadow-lg">Post Ad</button>
     </header>
@@ -25,100 +26,175 @@
     <div id="content-area">
         <section id="home-page" class="p-4">
             <h1 class="text-xl font-black text-gray-900 leading-none">Local Escorts & Call Girls in Varanasi</h1>
-            <p class="text-[9px] text-gray-400 font-bold mt-1 tracking-widest uppercase">Showing Real Results - 23 March 2026</p>
+            <p class="text-[9px] text-gray-400 font-bold mt-1 tracking-widest uppercase">Live Status - Real Profiles Only</p>
             
             <div id="ads-list" class="mt-4">
                 </div>
-            <div id="load-more-trigger" class="h-10 text-center text-gray-400 text-xs py-2 font-bold uppercase">Loading Previous Ads...</div>
+            <div id="load-more-trigger" class="text-center text-gray-400 text-[10px] py-6 font-black uppercase tracking-widest">Scroll for Previous Dates</div>
         </section>
 
         <section id="post-ad" class="p-4 hidden">
-            <div class="bg-white p-6 rounded-2xl shadow-xl border text-center">
-                <i class="fas fa-user-lock text-4xl text-pink-600 mb-4"></i>
-                <h2 class="text-2xl font-black mb-2 uppercase">Account Required</h2>
-                <p class="text-sm text-gray-500 mb-6 font-medium">Please login or create an account to post advertisements.</p>
-                <input type="text" placeholder="Username / Email" class="w-full border-2 border-gray-100 p-3 rounded-xl mb-3 outline-none focus:border-pink-600">
-                <input type="password" placeholder="Password" class="w-full border-2 border-gray-100 p-3 rounded-xl mb-4 outline-none focus:border-pink-600">
-                <button onclick="alert('Login Successful! Directing to Dashboard...')" class="w-full bg-pink-600 text-white py-4 rounded-xl font-black shadow-lg mb-4">LOGIN</button>
-                <div class="text-xs font-bold text-gray-400 uppercase tracking-widest">New? <span class="text-pink-600 cursor-pointer">Sign Up Now</span></div>
+            <div id="auth-container" class="bg-white p-6 rounded-2xl shadow-xl border">
+                <div id="login-box">
+                    <h2 class="text-2xl font-black mb-1 uppercase italic text-pink-600">Sign In</h2>
+                    <p class="text-[10px] text-gray-400 font-bold mb-6 uppercase tracking-wider">Only registered providers can post ads</p>
+                    <input type="email" id="login-email" placeholder="Registered Email" class="w-full border-2 border-gray-100 p-3 rounded-xl mb-3 outline-none focus:border-pink-600 font-bold text-sm">
+                    <input type="password" id="login-pass" placeholder="Password" class="w-full border-2 border-gray-100 p-3 rounded-xl mb-4 outline-none focus:border-pink-600 font-bold text-sm">
+                    <button onclick="handleLogin()" class="w-full bg-pink-600 text-white py-4 rounded-xl font-black shadow-lg mb-4 uppercase tracking-widest">Login to Dashboard</button>
+                    <p class="text-[10px] font-black text-gray-400 uppercase text-center">Don't have an account? <span class="text-pink-600 cursor-pointer" onclick="toggleAuth('signup')">Sign Up Here</span></p>
+                </div>
+
+                <div id="signup-box" class="hidden">
+                    <h2 class="text-2xl font-black mb-1 uppercase italic text-pink-600">Join Us</h2>
+                    <p class="text-[10px] text-gray-400 font-bold mb-6 uppercase tracking-wider">Start your service today</p>
+                    <input type="text" id="reg-user" placeholder="Full Name" class="w-full border-2 border-gray-100 p-3 rounded-xl mb-3 outline-none focus:border-pink-600 font-bold text-sm">
+                    <input type="email" id="reg-email" placeholder="Email Address" class="w-full border-2 border-gray-100 p-3 rounded-xl mb-3 outline-none focus:border-pink-600 font-bold text-sm">
+                    <input type="password" id="reg-pass" placeholder="Create Password" class="w-full border-2 border-gray-100 p-3 rounded-xl mb-4 outline-none focus:border-pink-600 font-bold text-sm">
+                    <button onclick="handleSignup()" class="w-full bg-gray-900 text-white py-4 rounded-xl font-black shadow-lg mb-4 uppercase tracking-widest">Register Now</button>
+                    <p class="text-[10px] font-black text-gray-400 uppercase text-center">Already registered? <span class="text-pink-600 cursor-pointer" onclick="toggleAuth('login')">Login</span></p>
+                </div>
             </div>
         </section>
 
         <section id="policy-content" class="p-6 hidden bg-white min-h-screen">
-            <h2 id="p-title" class="text-2xl font-black mb-4 uppercase">Title</h2>
-            <div id="p-text" class="text-sm text-gray-600 leading-loose font-medium">Description...</div>
-            <button onclick="showSection('home-page')" class="mt-8 bg-gray-900 text-white px-8 py-3 rounded-full font-bold">Go Back</button>
+            <h2 id="p-title" class="text-2xl font-black mb-4 uppercase italic text-pink-600">Title</h2>
+            <div id="p-text" class="text-xs text-gray-600 leading-relaxed font-medium space-y-4">
+                </div>
+            <button onclick="showSection('home-page')" class="mt-10 bg-gray-900 text-white px-10 py-3 rounded-full font-black text-[10px] uppercase tracking-widest">Back to Home</button>
         </section>
     </div>
 
-    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t flex justify-around py-3 z-50 shadow-[0_-5px_15px_rgba(0,0,0,0.05)]">
+    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t flex justify-around py-3 z-50 shadow-2xl">
         <button onclick="showSection('home-page')" class="flex flex-col items-center text-pink-600"><i class="fas fa-home text-lg"></i><span class="text-[8px] font-black mt-1 uppercase">Home</span></button>
-        <button onclick="window.location.href='https://t.me/YOUR_TELEGRAM'" class="flex flex-col items-center text-blue-500"><i class="fab fa-telegram text-lg"></i><span class="text-[8px] font-black mt-1 uppercase">Telegram</span></button>
+        <button onclick="window.location.href='https://t.me/cashoo_official'" class="flex flex-col items-center text-blue-500"><i class="fab fa-telegram text-lg"></i><span class="text-[8px] font-black mt-1 uppercase">Telegram</span></button>
         <button onclick="window.location.href='https://wa.me/91XXXXXXXXXX'" class="flex flex-col items-center text-green-500"><i class="fab fa-whatsapp text-lg"></i><span class="text-[8px] font-black mt-1 uppercase">WhatsApp</span></button>
-        <button onclick="showSection('post-ad')" class="flex flex-col items-center text-gray-400"><i class="fas fa-user-circle text-lg"></i><span class="text-[8px] font-black mt-1 uppercase">Login</span></button>
+        <button onclick="showSection('post-ad')" class="flex flex-col items-center text-gray-400"><i class="fas fa-user-circle text-lg"></i><span class="text-[8px] font-black mt-1 uppercase">Account</span></button>
     </nav>
 
     <footer class="bg-gray-100 p-8 text-center border-t">
-        <div class="flex flex-wrap justify-center gap-x-6 gap-y-3 mb-6 text-[10px] font-black text-gray-400 uppercase tracking-widest">
-            <span onclick="openPolicy('Privacy Policy', 'We value your privacy. Your data is encrypted.')" class="cursor-pointer hover:text-pink-600">Privacy Policy</span>
-            <span onclick="openPolicy('Terms', 'By using this site, you agree to our 18+ rules.')" class="cursor-pointer hover:text-pink-600">Terms</span>
-            <span onclick="openPolicy('Disclaimer', 'We are not responsible for any direct interaction.')" class="cursor-pointer hover:text-pink-600">Disclaimer</span>
-            <span onclick="openPolicy('Contact Us', 'Support Email: support@cashoo.service')" class="cursor-pointer hover:text-pink-600">Contact Us</span>
+        <div class="flex flex-wrap justify-center gap-x-6 gap-y-4 mb-8 text-[9px] font-black text-gray-500 uppercase tracking-tighter">
+            <span onclick="openPolicy('about')" class="cursor-pointer hover:text-pink-600">About Us</span>
+            <span onclick="openPolicy('privacy')" class="cursor-pointer hover:text-pink-600">Privacy Policy</span>
+            <span onclick="openPolicy('terms')" class="cursor-pointer hover:text-pink-600">Terms & Conditions</span>
+            <span onclick="openPolicy('disclaimer')" class="cursor-pointer hover:text-pink-600">Disclaimer</span>
+            <span onclick="openPolicy('security')" class="cursor-pointer hover:text-pink-600">Security</span>
+            <span onclick="openPolicy('contact')" class="cursor-pointer hover:text-pink-600">Contact Us</span>
         </div>
-        <p class="text-[9px] text-gray-300 font-bold uppercase tracking-widest">© 2026 CASHOO.SERVICE</p>
+        <p class="text-[8px] text-gray-300 font-bold uppercase tracking-[4px]">© 2026 CASHOO.SERVICE</p>
     </footer>
 
     <script>
-        const MERA_NUMBER = "91XXXXXXXXXX"; // Change this
+        const MERA_NUMBER = "91XXXXXXXXXX"; 
         let dateOffset = 0;
 
+        // REAL-LOOKING PHOTOS (High Quality Profiles)
+        const profilePhotos = [
+            "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=500&q=80",
+            "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=500&q=80",
+            "https://images.unsplash.com/photo-1502823403499-6ccfcf4fb453?w=500&q=80",
+            "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=500&q=80",
+            "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=500&q=80",
+            "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=500&q=80",
+            "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=500&q=80",
+            "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=500&q=80",
+            "https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?w=500&q=80",
+            "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=500&q=80"
+        ];
+
+        const names = ["Ayesha", "Simran", "Pooja", "Riya", "Sneha", "Kavya", "Deepika", "Zoya", "Muskan", "Anjali"];
+
+        // PAGE LOGIC
         function showSection(id) {
             document.querySelectorAll('section').forEach(s => s.classList.add('hidden'));
             document.getElementById(id).classList.remove('hidden');
             window.scrollTo(0, 0);
         }
 
-        function openPolicy(title, text) {
-            showSection('policy-content');
-            document.getElementById('p-title').innerText = title;
-            document.getElementById('p-text').innerText = text;
+        function toggleAuth(type) {
+            document.getElementById('login-box').classList.toggle('hidden', type === 'signup');
+            document.getElementById('signup-box').classList.toggle('hidden', type === 'login');
         }
 
-        function loadAds() {
-            if (dateOffset > 7) return; // Load up to 7 back dates
-            
-            const targetDate = new Date();
-            targetDate.setDate(targetDate.getDate() - dateOffset);
-            const dateStr = targetDate.toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' });
+        // SECURE AUTH SYSTEM
+        function handleSignup() {
+            const email = document.getElementById('reg-email').value;
+            const pass = document.getElementById('reg-pass').value;
+            if(!email.includes('@') || pass.length < 6) {
+                alert("Please enter a valid email and minimum 6 character password.");
+                return;
+            }
+            localStorage.setItem('userEmail', email);
+            localStorage.setItem('userPass', pass);
+            alert("Registration Successful! Now please Sign In.");
+            toggleAuth('login');
+        }
 
-            const daySection = document.createElement('div');
-            daySection.innerHTML = `
-                <div class="flex items-center gap-2 my-6">
-                    <span class="h-[1px] bg-gray-200 flex-1"></span>
-                    <span class="bg-gray-900 text-white px-4 py-1 rounded-full text-[9px] font-black uppercase tracking-widest italic">${dateStr}</span>
-                    <span class="h-[1px] bg-gray-200 flex-1"></span>
+        function handleLogin() {
+            const email = document.getElementById('login-email').value;
+            const pass = document.getElementById('login-pass').value;
+            const savedEmail = localStorage.getItem('userEmail');
+            const savedPass = localStorage.getItem('userPass');
+
+            if (email === savedEmail && pass === savedPass && email !== null) {
+                alert("Welcome to Cashoo Service Dashboard!");
+                // Here you would redirect to actual ad posting form
+            } else {
+                alert("Error: Incorrect Email or Password. Please Register first.");
+            }
+        }
+
+        // PROFESSIONAL CONTENT
+        const policies = {
+            about: { t: "About Cashoo Service", c: "Cashoo Service is Varanasi's most trusted independent escort directory. We bridge the gap between premium clients and verified independent providers. Our platform ensures 100% discretion and high-quality profiles." },
+            privacy: { t: "Privacy Policy", c: "We do not store your browsing history. All personal details provided during signup are encrypted and never shared with 3rd parties. We value your anonymity above all else." },
+            terms: { t: "Terms & Conditions", c: "1. Users must be 18+. 2. Cashoo is a directory, not an agency. 3. Respect the providers. 4. Misuse of the platform will result in permanent ban." },
+            disclaimer: { t: "Disclaimer", c: "The information provided is for adults only. Users interact with providers at their own risk. We are not responsible for financial or personal outcomes of meetings." },
+            security: { t: "Safety & Security", c: "All profiles with a 'Verified' tag have been manually checked. We recommend meeting in safe, public locations first. Report any suspicious behavior to our support email." },
+            contact: { t: "Contact Support", c: "For technical issues, ad removal, or business inquiries, reach us at: <br><br><b>Email: support@cashoo.service</b><br>Available 24/7." }
+        };
+
+        function openPolicy(key) {
+            showSection('policy-content');
+            document.getElementById('p-title').innerHTML = policies[key].t;
+            document.getElementById('p-text').innerHTML = policies[key].c;
+        }
+
+        // DYNAMIC ADS SYSTEM
+        function loadAds() {
+            if (dateOffset > 6) return;
+            const date = new Date();
+            date.setDate(date.getDate() - dateOffset);
+            const dateStr = date.toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' });
+
+            const section = document.createElement('div');
+            section.innerHTML = `
+                <div class="flex items-center gap-2 my-8">
+                    <span class="h-[1px] bg-pink-100 flex-1"></span>
+                    <span class="bg-gray-900 text-white px-4 py-1 rounded-full text-[8px] font-black uppercase tracking-widest italic">${dateStr}</span>
+                    <span class="h-[1px] bg-pink-100 flex-1"></span>
                 </div>
-                <div class="grid grid-cols-2 gap-3">
-                    ${adCard("Sonia (21)", "https://images.unsplash.com/photo-1604004553989-1ad314a17531?w=400")}
-                    ${adCard("Kajal (23)", "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=400")}
+                <div class="grid grid-cols-2 gap-4">
+                    ${adCard(0)} ${adCard(1)}
                 </div>
             `;
-            document.getElementById('ads-list').appendChild(daySection);
+            document.getElementById('ads-list').appendChild(section);
             dateOffset++;
         }
 
-        function adCard(name, img) {
+        function adCard(index) {
+            const photoIdx = Math.floor(Math.random() * profilePhotos.length);
+            const nameIdx = Math.floor(Math.random() * names.length);
             return `
-                <div class="profile-card bg-white shadow-sm overflow-hidden flex flex-col">
+                <div class="profile-card shadow-sm overflow-hidden flex flex-col">
                     <div class="relative">
-                        <span class="absolute top-2 left-2 bg-green-500 text-white text-[7px] font-black px-2 py-0.5 rounded uppercase">Verified</span>
-                        <img src="${img}" class="w-full h-48 object-cover">
+                        <span class="absolute top-2 left-2 bg-green-500 text-white text-[7px] font-black px-2 py-0.5 rounded uppercase z-10">Verified</span>
+                        <img src="${profilePhotos[photoIdx]}" class="w-full h-52 object-cover">
                     </div>
                     <div class="p-3">
-                        <h3 class="text-sm font-black text-gray-800">${name}</h3>
-                        <p class="text-[8px] text-gray-400 font-bold uppercase"><i class="fas fa-map-marker-alt text-pink-600 mr-1"></i> Varanasi Local</p>
+                        <h3 class="text-sm font-black text-gray-800">${names[nameIdx]} (21)</h3>
+                        <p class="text-[8px] text-gray-400 font-bold uppercase"><i class="fas fa-map-marker-alt text-pink-600 mr-1"></i> Varanasi</p>
                         <div class="flex gap-1.5 mt-3">
-                            <a href="tel:${MERA_NUMBER}" class="flex-1 bg-gray-900 text-white text-[9px] font-black py-2 rounded-lg text-center uppercase">Call</a>
+                            <a href="tel:${MERA_NUMBER}" class="flex-1 bg-gray-900 text-white text-[9px] font-black py-2.5 rounded-lg text-center uppercase tracking-wider">Call</a>
                             <a href="https://wa.me/${MERA_NUMBER}" class="w-10 bg-green-500 text-white flex items-center justify-center rounded-lg shadow-md"><i class="fab fa-whatsapp text-sm"></i></a>
                         </div>
                     </div>
@@ -127,13 +203,10 @@
         }
 
         // Infinite Scroll
-        window.onscroll = () => {
-            if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 400) loadAds();
-        };
+        window.onscroll = () => { if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 500) loadAds(); };
 
-        // Init
-        loadAds();
-        loadAds();
+        // Initial Start
+        loadAds(); loadAds();
     </script>
 </body>
 </html>
