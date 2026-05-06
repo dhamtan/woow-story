@@ -1,59 +1,41 @@
 name: Daily Web Stories
+
 on:
   schedule:
-    - cron: '0 2 * * *'
-    - cron: '0 14 * * *'
-  workflow_dispatch:
+    - cron: '0 2 * * *'   # 2 AM UTC
+    - cron: '0 14 * * *'  # 2 PM UTC
+  workflow_dispatch:      # Manual run button
 
 permissions:
   contents: write
 
 jobs:
-  stories:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
-      
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.10'
-          
-      - name: Generate Stories
+          cache: 'pip' # Isse baar-baar install hone ki speed badhegi
+
+      - name: Install Dependencies
+        run: |
+          pip install --upgrade pip
+          pip install google-generativeai requests
+
+      - name: Run Story Generator
         env:
           GEMINI_KEY: ${{ secrets.GEMINI_KEY }}
           PEXELS_KEY: ${{ secrets.PEXELS_KEY }}
           MY_URL: ${{ secrets.MY_URL }}
-        run: |
-          pip install google-generativeai requests
-          python << 'EOF'
-          import os, requests, google.generativeai as genai
-          
-          def save_html(lang, topic, filename):
-              try:
-                  genai.configure(api_key=os.environ['GEMINI_KEY'])
-                  model = genai.GenerativeModel('gemini-pro')
-                  content = model.generate_content(f'Write a 50-word story in {lang} about {topic}').text
-                  
-                  headers = {'Authorization': os.environ['PEXELS_KEY']}
-                  params = {'query': topic, 'per_page': 1, 'orientation': 'portrait'}
-                  r = requests.get('https://api.pexels.com/v1/search', headers=headers, params=params)
-                  img = r.json()['photos'][0]['src']['large2x'] if r.status_code == 200 and r.json()['photos'] else 'https://images.pexels.com/photos/261187/pexels-photo-261187.jpeg'
-                  
-                  site_url = os.environ['MY_URL']
-                  html = f"""<!doctype html><html amp lang="{lang}"><head><meta charset="utf-8"><title>{topic}</title><link rel="canonical" href="{site_url}"><meta name="viewport" content="width=device-width,minimum-scale=1"><script async src="https://cdn.ampproject.org/v0.js"></script><script async custom-element="amp-story" src="https://cdn.ampproject.org/v0/amp-story-1.0.js"></script></head><body><amp-story standalone title="{topic}" publisher="Woow Story" publisher-logo-src="logo.png" poster-portrait-src="{img}"><amp-story-page id="p1"><amp-story-grid-layer template="fill"><amp-img src="{img}" width="720" height="1280" layout="responsive"></amp-img></amp-story-grid-layer><amp-story-grid-layer template="vertical"><h1>{topic}</h1></amp-story-grid-layer></amp-story-page><amp-story-page id="p2"><amp-story-grid-layer template="vertical"><div style="background:rgba(0,0,0,0.7);padding:20px;color:white;font-size:1.2rem;">{content}</div></amp-story-grid-layer></amp-story-page></amp-story></body></html>"""
-                  
-                  with open(filename, 'w', encoding='utf-8') as f:
-                      f.write(html)
-              except Exception as e:
-                  print(f"Error generating {filename}: {e}")
+        run: python generator.py
 
-          save_html('hi', 'आज का ट्रेंड', 'index.html')
-          save_html('en', 'Today Trend', 'en.html')
-          EOF
-
-      - name: Commit and Push
+      - name: Commit and Push Changes
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: 'Daily stories updated'
+          commit_message: "Auto-update stories: ${{ github.event.repository.updated_at }}"
+          file_pattern: "*.html"
